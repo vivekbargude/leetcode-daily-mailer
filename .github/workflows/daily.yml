@@ -1,0 +1,29 @@
+name: LeetCode Daily Mailer
+
+on:
+  schedule:
+    - cron: '30 2 * * *'  # Runs daily at 8:00 AM IST (2:30 AM UTC)
+  workflow_dispatch:       # Allow manual trigger from GitHub UI
+
+jobs:
+  send-mail:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run script
+        env:
+          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+          RECEIVER_EMAIL: ${{ secrets.RECEIVER_EMAIL }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+        run: python daily_leetcode.py
